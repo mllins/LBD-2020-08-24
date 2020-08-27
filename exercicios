@@ -1,0 +1,419 @@
+--- Exercício 01: Fazer um algoritmo que, dado 1 número, mostre se é múltiplo de 2,3,5 ou nenhum deles
+
+DECLARE @num	INT
+
+SET @num = 10
+
+IF(@num%2 = 0)
+BEGIN
+	PRINT 'Este número é divisível por 2.'
+END
+ELSE
+BEGIN
+	PRINT 'Este número NÃO é divisível por 2.'
+END
+
+IF(@num%3 = 0)
+BEGIN
+	PRINT 'Este número é divisível por 3.'
+END
+ELSE
+BEGIN
+	PRINT 'Este número NÃO é divisível por 3.'
+END
+
+IF(@num%5 = 0)
+BEGIN
+	PRINT 'Este número é divisível por 5.'
+END
+ELSE
+BEGIN
+	PRINT 'Este número NÃO é divisível por 5.'
+END
+
+-- OU PODE SER VISTO DESTA MANEIRA
+
+DECLARE @num		INT,
+		@divisores	CHAR(3),
+		@posicao	INT,
+		@valor		INT
+
+SET @num = 10
+SET @posicao = 1
+SET @divisores = '235'
+
+WHILE(@posicao <=3)
+BEGIN
+	SET @valor = CAST(SUBSTRING(@divisores,@posicao,1) AS INT)
+
+	IF(@num % @valor = 0)
+	BEGIN
+		PRINT 'O número '+CAST(@num AS VARCHAR(3)) + ' é divisível por '+CAST(@valor AS VARCHAR(3)) + '.'
+	END
+	ELSE
+	BEGIN
+		PRINT 'O número '+CAST(@num AS VARCHAR(3)) + ' NÃO é divisível por '+CAST(@valor AS VARCHAR(3)) + '.'
+	END
+	SET @posicao = @posicao + 1
+END
+
+-------------------------------------------------------------------------------------------------------------------------
+
+--- Exercício 02: Fazer um algoritmo que, dados 3 números, mostre o maior e o menor
+
+DECLARE @num1		INT,
+		@num2		INT,
+		@num3		INT,
+		@maior		INT,
+		@menor		INT
+
+SET @num1 = 10
+SET @num2 = 15
+SET @num3 = 5
+
+-- Testa em relação aos dois primeiros números
+IF(@num1>@num2)
+BEGIN
+	SET @maior = @num1
+	SET @menor = @num2
+END
+ELSE
+BEGIN
+	SET @maior = @num2
+	SET @menor = @num1
+END
+
+-- Comparações com o terceiro número.
+IF(@maior < @num3)
+BEGIN
+	SET @maior = @num3
+END
+IF(@menor > @num3)
+BEGIN
+	SET @menor = @num3
+END
+
+-- Resultado
+PRINT 'O maior deles é ' + CAST(@maior  AS VARCHAR(3)) + '.'
+PRINT 'O menor deles é ' + CAST(@menor  AS VARCHAR(3)) + '.'
+
+-------------------------------------------------------------------------------------------------------------------------
+
+-- Exercício 03: Fazer um algoritmo que calcule os 15 primeiros termos da série de Fibonacci e a soma dos 15 primeiros termos
+-- Série de Fibonacci: 1, 1, 2, 3, 5, 8, 13, 21, 34, 55, 89...
+
+DECLARE @num		INT,
+		@numant		INT,
+		@proxnum	INT,
+		@soma		INT,
+		@cont		INT
+
+SET @num = 1
+SET @numant = 0
+SET @soma = 0
+SET @cont = 0
+
+WHILE (@cont <15)
+BEGIN
+	SET @cont = @cont + 1
+	SET @soma = @soma + @num
+	PRINT 'Número (' + CAST(@cont AS VARCHAR(2)) + '): ' + 
+	CAST(@num AS VARCHAR(3)) + '. Soma: ' + 
+	CAST(@soma AS VARCHAR(5)) + '.'
+	SET @proxnum = @num + @numant
+	SET @numant = @num
+	SET @num = @proxnum
+END
+
+-------------------------------------------------------------------------------------------------------------------------
+
+-- Exercício 04: Fazer um algoritmo que separa uma frase, imprimindo todas as letras em maiúsculo e, depois imprimindo todas em minúsculo
+
+DECLARE @frase				VARCHAR(1024),
+		@palavra			VARCHAR(100),
+		@letrasmaiusculas	VARCHAR(100),
+		@letrasminusculas	VARCHAR(100),
+		@letra				CHAR(1),
+		@posicao			INT,
+		@indice				INT
+
+SET @frase = 'O rato roeu a roupa do rei de roma.'
+SET @letrasmaiusculas = 'ABCDEFGHIJKLMNOPQRSTUVWXYZÁÀÃÂÉÊÍÓÕÔÚ'
+SET @letrasminusculas = 'abcdefghijklmnopqrstuvwxyzáàãâéêíóõôú'
+
+SET @posicao = 0
+SET @palavra = ''
+WHILE(@posicao < LEN(@frase))
+BEGIN
+	SET @posicao = @posicao + 1
+	SET @letra = SUBSTRING(@frase,@posicao,1)
+	SET @indice = CHARINDEX(@letra,@letrasminusculas)
+	IF(@indice>0)
+	BEGIN
+		SET @letra = SUBSTRING(@letrasmaiusculas,@indice,1)
+	END
+	IF(@letra = ' ')
+	BEGIN
+		PRINT @palavra
+		SET @palavra = ''
+	END
+	ELSE
+	BEGIN
+		SET @palavra = @palavra + @letra
+	END
+END
+PRINT @palavra
+PRINT '---'
+
+SET @posicao = 0
+SET @palavra = ''
+WHILE(@posicao < LEN(@frase))
+BEGIN
+	SET @posicao = @posicao + 1
+	SET @letra = SUBSTRING(@frase,@posicao,1)
+	SET @indice = CHARINDEX(@letra,@letrasmaiusculas)
+	IF(@indice>0)
+	BEGIN
+		SET @letra = SUBSTRING(@letrasminusculas,@indice,1)
+	END
+	IF(@letra = ' ')
+	BEGIN
+		PRINT @palavra
+		SET @palavra = ''
+	END
+	ELSE
+	BEGIN
+		SET @palavra = @palavra + @letra
+	END
+END
+PRINT @palavra
+
+-- OU pode ser visto desta maneira
+
+DECLARE @frase				VARCHAR(1024),
+		@palavra			VARCHAR(100),
+		@letra				CHAR(1),
+		@posicao			INT
+
+SET @frase = 'O rato roeu a roupa do rei de roma.'
+
+SET @posicao = 0
+SET @palavra = ''
+SET @frase = UPPER(@frase)
+
+WHILE(@posicao < LEN(@frase))
+BEGIN
+	SET @posicao = @posicao + 1
+	SET @letra = SUBSTRING(@frase,@posicao,1)
+	IF(@letra = ' ')
+	BEGIN
+		PRINT @palavra
+		SET @palavra = ''
+	END
+	ELSE
+	BEGIN
+		SET @palavra = @palavra + @letra
+	END
+END
+PRINT @palavra
+PRINT '---'
+
+SET @posicao = 0
+SET @palavra = ''
+SET @frase = LOWER(@frase)
+
+WHILE(@posicao < LEN(@frase))
+BEGIN
+	SET @posicao = @posicao + 1
+	SET @letra = SUBSTRING(@frase,@posicao,1)
+	IF(@letra = ' ')
+	BEGIN
+		PRINT @palavra
+		SET @palavra = ''
+	END
+	ELSE
+	BEGIN
+		SET @palavra = @palavra + @letra
+	END
+END
+PRINT @palavra
+
+-------------------------------------------------------------------------------------------------------------------------
+
+-- Exercício 05: Fazer um algoritmo que verifica, dada uma palavra, se é, ou não, palíndromo
+
+DECLARE @palavra		VARCHAR(1024),
+		@reversa		VARCHAR(1024),
+		@letra			CHAR(1),
+		@posicao		INT
+
+SET @palavra = 'SATOR AREPO TENET OPERA ROTAS'
+
+SET @palavra = UPPER(@palavra)
+SET @reversa = ''
+SET @posicao = 0
+
+WHILE(@posicao < LEN(@palavra))
+BEGIN
+	SET @posicao = @posicao + 1
+	SET @letra = SUBSTRING(@palavra, @posicao, 1)
+	SET @reversa = @letra + @reversa
+END
+IF(@palavra = @reversa)
+BEGIN
+	PRINT 'A palavra '+@palavra+' é um palíndromo.'
+END
+ELSE
+BEGIN
+	PRINT 'A palavra '+@palavra+' NÃO é um palíndromo.'
+END
+
+-------------------------------------------------------------------------------------------------------------------------
+
+--- Exercício 06: Fazer um algoritmo que, dado um CPF diga se é válido
+
+-- Declaração de variáveis
+
+DECLARE @cpf			CHAR(14),
+		@charat			CHAR(1),
+		@posicao		INT,
+		@multiplicador	INT,
+		@valoranterior	INT,
+		@valor			INT,
+		@iguais			INT,
+		@erros			INT,
+		@digito1		INT,
+		@digito2		INT
+
+-- Inicialização das ariáveis
+
+SET @cpf = '222.333.666-38'
+SET @posicao = 1
+SET @valor = -1
+SET @valoranterior = -1
+SET @erros = 0
+SET @digito1 = 0
+SET @digito2 = 0
+SET @multiplicador = 10
+
+-- Testa se o CPF tem tamanho compatível com a quantidade de caracteres necessárias
+IF(LEN(@cpf)=14)
+BEGIN
+	WHILE (@posicao<=12)
+	BEGIN
+		-- Atualiza o valor anterior, se necessário (a partir da segunda posição)
+		IF(@posicao>1)
+		BEGIN
+			SET @valoranterior = @valor
+		END
+
+		-- Obtém o caractere na posicao indicada
+		SET @charat = SUBSTRING(@cpf,@posicao,1)
+
+		-- Testa se a posicao é ponto ou traço (Múltiplos de 4 devem ser)
+		IF(@posicao%4>0)
+		BEGIN
+
+			-- Testa se é um número
+			IF(@charat >= '0' AND @charat <='9')
+			BEGIN
+
+				-- Converte o número para inteiro
+				SET @valor = CAST(@charat AS INT)
+
+				-- Caso o valor obtido é igual ao anterior, atualiza o contador de iguais ou o zera, em caso contrário
+				IF(@valor = @valoranterior)
+				BEGIN
+					SET @iguais = @iguais + 1
+				END
+				ELSE
+				BEGIN
+					SET @iguais = 0
+				END
+
+				-- Utiliza o valor obtido para para o cálculo das somas verificadoras
+				SET @digito1 = @digito1 + @valor*@multiplicador
+				SET @digito2 = @digito2 + @valor*(@multiplicador+1)
+--				PRINT CAST(@posicao AS CHAR(5)) + ' | ' + CAST(@valor AS CHAR(5)) + ' | ' + 
+--				CAST(@multiplicador AS CHAR(5)) + ' | ' + CAST(@digito1 AS CHAR(5)) + ' | ' +  
+--				CAST((1+@multiplicador) AS CHAR(5)) + ' | ' + CAST(@digito2 AS CHAR(5))
+				SET @multiplicador = @multiplicador - 1
+			END
+			ELSE
+			BEGIN
+				-- Não é número onde deveria ser. Aumenta o contador de erros
+				SET @erros = @erros + 1
+			END
+		END
+		ELSE
+		BEGIN
+			-- Testa se em posições não numéricas tem '.' ou '-' no lugar certo
+			IF(@posicao<10 AND @charat<>'.' OR @posicao=10 AND @charat<>'-')
+			BEGIN
+				-- Atualiza o contador de erros
+				SET @erros = @erros + 1
+			END
+		END
+		SET @posicao = @posicao +1
+	END
+
+	-- Converte seus valores de verificação em dígitos verificadoers
+	SET @digito1 = @digito1 % 11
+	IF (@digito1 < 2)
+	BEGIN
+		SET @digito1 = 0
+	END
+	ELSE
+	BEGIN
+		SET @digito1 = 11 - @digito1
+	END
+
+	-- Acrescenta o primeiro dígito verificador no cálculo do segundo
+	SET @digito2 = @digito2 + @digito1*2
+
+	SET @digito2 = @digito2 % 11
+	IF (@digito2 < 2)
+	BEGIN
+		SET @digito2 = 0
+	END
+	ELSE
+	BEGIN
+		SET @digito2 = 11 - @digito2
+	END
+
+	-- verifica se todos os dígitos são iguais
+	IF(@iguais=9 AND @valor=@digito1 AND @valor=@digito2)
+	BEGIN
+		SET @erros = @erros+1
+	END
+
+	-- Obtém os dígitos de verificação do CPF
+	SET @valor = CAST(SUBSTRING(@cpf,13,2) AS INT)
+
+	-- Se não coincidem o calculado do obtido, atualiza o contador de erros
+	SET @valoranterior =  @digito1*10+@digito2
+	IF(@valor <> @digito1 * 10 + @digito2)
+	BEGIN
+		SET @erros = @erros + 1
+	END
+END
+ELSE
+BEGIN
+	-- CPF de tamanho incompatível
+	SET @erros = @erros + 1
+END
+
+-- TESTA SE HOUVE ERROS NO CÁLCULO DE CPF
+IF (@erros=0)
+BEGIN
+	PRINT 'CPF válido.'
+END
+ELSE
+BEGIN
+	PRINT 'CPF inválido.'
+	IF(@valor>-1)
+	BEGIN
+		PRINT 'Esperado: ' + CAST(@valor AS VARCHAR(10)) + '. Obtido:' + CAST(@valoranterior AS VARCHAR(10))
+	END
+	PRINT 'Foram encontrados ' + CAST(@erros AS VARCHAR(10)) + ' erros.'
+END
